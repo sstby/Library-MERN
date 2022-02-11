@@ -1,0 +1,26 @@
+.table-edit-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.table {
+  padding: 0;
+}
+
+.table thead {
+  background-color: #ecf0f5;
+  align-items: center;
+}
+
+.table-controls {
+  text-align: center;
+}
+
+.table-controls svg {
+  cursor: pointer;
+  transition: all 200ms ease;
+  margin: 0 0.5rem;
+}
+.table-controls svg:hover {
+  transform: scale(1.1);
+}
