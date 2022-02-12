@@ -3,6 +3,10 @@ export function selectData(searchTerms, searchData) {
   let selectedData = searchData.slice();
   for (let key of inputKeys) {
     selectedData = selectedData.filter((entry) => {
+      if (typeof entry[key] === "boolean") {
+        return entry[key].toString() === searchTerms[key] ? entry : null;
+      }
+
       return entry[key].includes(searchTerms[key]) ? entry : null;
     });
   }
@@ -13,6 +17,7 @@ export function selectData(searchTerms, searchData) {
 }
 
 export function sortData(sort, data) {
+  console.log(sort, data);
   let sortedData = data.slice();
   const { field, reversed } = sort;
   sortedData.sort((a, b) => {

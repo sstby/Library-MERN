@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import TableHead from "./TableHead";
 import TableData from "./TableData";
 import "./DataTable.css";
@@ -6,6 +6,7 @@ import "./DataTable.css";
 const DataTable = (props) => {
   const {
     table,
+    thead,
     data,
     handleAddDocument,
     handleUpdateDocument,
@@ -14,23 +15,11 @@ const DataTable = (props) => {
     sort,
     setSearch,
     setSort,
+    helpData,
   } = props;
-  const [thead, setThead] = useState([]);
   const [newData, setNewData] = useState({});
   const [editData, setEditData] = useState();
   const [editting, setEditting] = useState({});
-
-  useEffect(() => {
-    if (data.length !== 0) {
-      let headings = [];
-      Object.keys(data[0]).forEach((title) => {
-        if (title[0] !== "_") {
-          headings.push(title.split("book")[1]);
-        }
-      });
-      setThead(headings);
-    }
-  }, [data]);
 
   const handleNewDataChange = (e) => {
     let entry = Object.assign({}, newData);
@@ -85,6 +74,7 @@ const DataTable = (props) => {
     <table className="table table-bordered table-striped">
       <thead>
         <TableHead
+          helpData={helpData}
           table={table}
           thead={thead}
           search={search}
@@ -95,6 +85,8 @@ const DataTable = (props) => {
       </thead>
       <tbody>
         <TableData
+          table={table}
+          helpData={helpData}
           thead={thead}
           data={data}
           newData={newData}

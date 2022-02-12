@@ -29,3 +29,9 @@
   align-items: center;
   cursor: pointer;
 }
+.table-controls__container {
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}

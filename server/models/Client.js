@@ -1,15 +1,31 @@
 const mongoose = require("mongoose");
 
 const ClientSchema = new mongoose.Schema({
-  firstName: {
+  clientFirstName: {
     type: String,
     required: true,
   },
-  lastName: {
+  clientLastName: {
     type: String,
     required: true,
   },
-  borrowedBooks: [{}],
+  clientBorrowedBook: {
+    type: String,
+    required: false,
+  },
+  clientBorrowDate: {
+    type: Date,
+    required: false,
+  },
+  clientBorrowDeathline: {
+    type: Date,
+    required: false,
+  },
+  clientBorrowReturned: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 const Client = mongoose.model("Client", ClientSchema);

@@ -61,7 +61,6 @@ app.put("/update-book", async (request, response) => {
   const { data, id } = request.body;
   try {
     await BookModel.findById(id, (error, book) => {
-      console.log(book);
       book.bookTitle = data.bookTitle;
       book.bookAuthor = data.bookAuthor;
       book.bookGenre = data.bookGenre;
@@ -74,13 +73,31 @@ app.put("/update-book", async (request, response) => {
   }
 });
 
+app.put("/update-client", async (request, response) => {
+  const { data, id } = request.body;
+  try {
+    await ClientModel.findById(id, (error, cleint) => {
+      cleint.clientFirstName = data.clientFirstName;
+      cleint.clientLastName = data.clientLastName;
+      cleint.clientBorrowedBook = data.clientBorrowedBook;
+      cleint.clientBorrowDate = data.clientBorrowDate;
+      cleint.clientBorrowDeathline = data.clientBorrowDeathline;
+      cleint.clientBorrowReturned = data.clientBorrowReturned;
+      cleint.save();
+    });
+  } catch (error) {
+    response.send("error");
+  }
+});
+
 app.delete("/delete/:db/:id", async (request, result) => {
   const db = request.params.db;
   const id = request.params.id;
 
-  if (db === "book");
-  {
+  if (db === "books") {
     await BookModel.findByIdAndRemove(id).exec();
+  } else {
+    await ClientModel.findByIdAndRemove(id).exec();
   }
 });
 

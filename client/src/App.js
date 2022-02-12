@@ -4,6 +4,15 @@ import Axios from "axios";
 import DataTable from "./Components/DataTable/DataTable";
 
 const URL = "http://localhost:3001";
+const BOOKS_HEADERS = ["Title", "Author", "Genre", "Sector", "Publishing"];
+const CLIENTS_HEADERS = [
+  "FirstName",
+  "LastName",
+  "BorrowedBook",
+  "BorrowDate",
+  "BorrowDeathline",
+  "BorrowReturned",
+];
 
 const App = () => {
   const [isUpdated, setIsUpdated] = useState(false);
@@ -65,6 +74,25 @@ const App = () => {
     } else setSelectedBooks(books);
   }, [bookSearch, books]);
 
+  //Поиск клиентов
+  useEffect(() => {
+    if (Object.keys(clientSearch).length !== 0) {
+      const result = selectData(clientSearch, clients);
+      if (result) {
+        setSelectedClients(result);
+      } else {
+        let res = {};
+        for (let key of Object.keys(clients[0])) {
+          res = {
+            ...res,
+            [key]: null,
+          };
+        }
+        setSelectedClients([res]);
+      }
+    } else setSelectedClients(clients);
+  }, [clientSearch, clients]);
+
   //Сортировка книг
   useEffect(() => {
     if (bookSort.field !== null) {
@@ -72,38 +100,12 @@ const App = () => {
     }
   }, [bookSort]);
 
-  const getFormatedDate = (day) => {
-    return day.getFullYear() + "-" + (day.getMonth() + 1) + "-" + day.getDate();
-  };
-
-  const addCollection = (location) => {
-    /* Axios.post(`${URL}/insert`, {
-      data: {
-        bookTitle: "Гарри Поттер и философский камень",
-        bookGenre: "Приключения",
-        bookAuthor: "Джоан Роулинг",
-        bookPublishing: "Махаон",
-        bookSector: "Детские",
-      },
-    }); */
-    const date = new Date();
-    let dateDeathline = new Date(date);
-    dateDeathline.setDate(dateDeathline.getDate() + 30);
-    console.log(getFormatedDate(date));
-    console.log(getFormatedDate(dateDeathline));
-    Axios.post(`${URL}/insert-client`, {
-      data: {
-        firstName: "John",
-        lastName: "Doe",
-        borrowedBooks: {
-          bookName: "Гарри Поттер и философский камень",
-          borrowDate: getFormatedDate(date),
-          borrowDeathline: getFormatedDate(dateDeathline),
-          isBack: false,
-        },
-      },
-    });
-  };
+  //Сортировка клиентов
+  useEffect(() => {
+    if (clientSort.field !== null) {
+      setClients((clients) => sortData(clientSort, clients));
+    }
+  }, [clientSort]);
 
   const handleAddBook = (value) => {
     const entry = {
@@ -116,6 +118,21 @@ const App = () => {
       },
     };
     Axios.post(`${URL}/insert-book`, entry);
+    setIsUpdated(true);
+  };
+
+  const handleAddClient = (value) => {
+    const entry = {
+      data: {
+        clientFirstName: value.FirstName,
+        clientLastName: value.LastName,
+        clientBorrowedBook: value.BorrowedBook,
+        clientBorrowDate: value.BorrowDate,
+        clientBorrowDeathline: value.BorrowDeathline,
+        clientBorrowReturned: value.BorrowReturned,
+      },
+    };
+    Axios.post(`${URL}/insert-client`, entry);
     setIsUpdated(true);
   };
 
@@ -132,6 +149,21 @@ const App = () => {
     setIsUpdated(true);
   };
 
+  const handleUpdateClient = (value) => {
+    console.log(value);
+    const entry = {
+      clientFirstName: value.clientFirstName,
+      clientLastName: value.clientLastName,
+      clientBorrowedBook: value.clientBorrowedBook,
+      clientBorrowDate: value.clientBorrowDate,
+      clientBorrowDeathline: value.clientBorrowDeathline,
+      clientBorrowReturned: value.clientBorrowReturned,
+    };
+    const id = value._id;
+    Axios.put(`${URL}/update-client`, { data: entry, id });
+    setIsUpdated(true);
+  };
+
   const handleRemoveDocument = (id, collection) => {
     Axios.delete(`${URL}/delete/${collection}/${id}`);
     setIsUpdated(true);
@@ -141,6 +173,7 @@ const App = () => {
     <div className="container">
       <DataTable
         table={"books"}
+        thead={BOOKS_HEADERS}
         search={bookSearch}
         sort={bookSort}
         setSearch={setBookSearch}
@@ -152,13 +185,15 @@ const App = () => {
       />
       <DataTable
         table={"clients"}
+        helpData={books}
+        thead={CLIENTS_HEADERS}
         search={clientSearch}
         sort={clientSort}
         setSearch={setClientSearch}
         setSort={setClientSort}
         data={selectedClients.length === 0 ? clients : selectedClients}
-        handleAddDocument={handleAddBook}
-        handleUpdateDocument={handleUpdateBook}
+        handleAddDocument={handleAddClient}
+        handleUpdateDocument={handleUpdateClient}
         handleRemoveDocument={handleRemoveDocument}
       />
     </div>
