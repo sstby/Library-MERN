@@ -3,6 +3,8 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const BookModel = require("./models/Book");
 const ClientModel = require("./models/Client");
+const { collection } = require("./models/Book");
+const { query } = require("express");
 const app = express();
 
 app.use(express.json());
@@ -69,6 +71,16 @@ app.put("/update-book", async (request, response) => {
     });
   } catch (error) {
     response.send("error");
+  }
+});
+
+app.delete("/delete/:db/:id", async (request, result) => {
+  const db = request.params.db;
+  const id = request.params.id;
+
+  if (db === "book");
+  {
+    await BookModel.findByIdAndRemove(id).exec();
   }
 });
 

@@ -24,3 +24,8 @@
 .table-controls svg:hover {
   transform: scale(1.1);
 }
+.table-head-title {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}

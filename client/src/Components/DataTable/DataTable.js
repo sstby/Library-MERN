@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { BsXLg, BsPencil, BsCheckLg, BsEraser } from "react-icons/bs";
 import TableHead from "./TableHead";
 import TableData from "./TableData";
 import "./DataTable.css";
 
 const DataTable = (props) => {
-  const { data, handleAddCollection, handleUpdateCollection } = props;
+  const {
+    table,
+    data,
+    handleAddDocument,
+    handleUpdateDocument,
+    handleRemoveDocument,
+    search,
+    sort,
+    setSearch,
+    setSort,
+  } = props;
   const [thead, setThead] = useState([]);
-  const [newData, setNewData] = useState();
+  const [newData, setNewData] = useState({});
   const [editData, setEditData] = useState();
   const [editting, setEditting] = useState({});
 
@@ -41,7 +50,8 @@ const DataTable = (props) => {
       return;
     }
 
-    handleAddCollection(newData, "book");
+    handleAddDocument(newData);
+    setNewData({});
   };
 
   const handleSetEditData = (data) => {
@@ -66,7 +76,7 @@ const DataTable = (props) => {
       });
       return;
     }
-    handleUpdateCollection(editData, "book");
+    handleUpdateDocument(editData, "book");
     setEditting({});
     setEditData();
   };
@@ -74,19 +84,29 @@ const DataTable = (props) => {
   return (
     <table className="table table-bordered table-striped">
       <thead>
-        <TableHead thead={thead} />
+        <TableHead
+          table={table}
+          thead={thead}
+          search={search}
+          sort={sort}
+          setSort={setSort}
+          setSearch={setSearch}
+        />
       </thead>
       <tbody>
         <TableData
           thead={thead}
           data={data}
+          newData={newData}
           editData={editData}
           editting={editting}
+          setNewData={setNewData}
           handleEditData={handleEditData}
           handleSetEditData={handleSetEditData}
           handleUpdateEditData={handleUpdateEditData}
           handleNewDataChange={handleNewDataChange}
           handleAddData={handleAddData}
+          handleRemoveDocument={handleRemoveDocument}
         />
       </tbody>
     </table>
